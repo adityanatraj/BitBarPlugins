@@ -14,8 +14,8 @@ You may need to restart BitBar to see it load.
 
 ![screenshot](http://i.imgur.com/Sv3BzD7.png)
 
-Status: # upcoming meetings
-Details: times and direct links to hangouts
+- Status: # upcoming meetings
+- Details: times and direct links to hangouts
 
 ##### Required Credentials
 You will need to set up your google api credentials and python dependencies. Follow the first and second steps [described here](https://developers.google.com/google-apps/calendar/quickstart/python).
@@ -24,8 +24,8 @@ You will need to set up your google api credentials and python dependencies. Fol
 
 ![screenshot](http://i.imgur.com/nK3gKyc.png)
 
-Status: <Feel Temp> <Icon for weather>
-Details: actual temp if different, wind speed/dir, if precipitating - inches/hr.
+- Status: <Feel Temp> <Icon for weather>
+- Details: actual temp if different, wind speed/dir, if precipitating - inches/hr.
 
 ##### Required Credentials
 
