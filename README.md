@@ -10,6 +10,11 @@ To install one of these plugins,
 
 You may need to restart BitBar to see it load.
 
+[Go here](https://github.com/matryer/bitbar) for more information on things like:
+- changing the frequency of script update
+- writing your own items
+- other examples (like the ones I used to write these!)
+
 ## Meetings
 
 ![screenshot](http://i.imgur.com/Sv3BzD7.png)
@@ -38,3 +43,8 @@ make a json config file at ~/.bitbar/weather.conf
   "lon": ## from http://mygeoposition.com/
 }
 ```
+
+
+### Thanks
+
+Thanks to [matryer](https://github.com/matryer) for BitBar. Take my code and do whatever.
