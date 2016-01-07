@@ -55,8 +55,7 @@ def temp_color(temp):
 
 
 def bearing(angle, nonsym=True):
-    s_angle = int((angle + 22.5) % 360)
-    idx = 8 - (360 / s_angle)
+    idx = int((angle + 22.5) / 45) % 8
     return BEARING[idx][nonsym]
 
 
