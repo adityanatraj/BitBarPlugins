@@ -61,8 +61,8 @@ def bearing(angle, nonsym=True):
 
 def render_weather(weather):
     curStat = ICON[weather['currently']['icon']]
-    curFeel = round(weather['currently']['temperature'])
-    curTemp = round(weather['currently']['apparentTemperature'])
+    curTemp = round(weather['currently']['temperature'])
+    curFeel = round(weather['currently']['apparentTemperature'])
     print '{}°F {} | color={}'.format(curFeel,
                                       curStat,
                                       temp_color(curTemp))
