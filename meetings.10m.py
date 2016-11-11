@@ -55,8 +55,86 @@ def get_credentials():
     return credentials
 
 
+class Event(object):
+
+    class When(object):
+        @staticmethod
+        def parse_time_raw(start):
+            if 'dateTime' in start:
+                startTime = start['dateTime'][0:-6]
+                tm = datetime.datetime.strptime(startTime, '%Y-%m-%dT%H:%M:%S')
+                h = tm.hour - 12 if tm.hour > 12 else tm.hour
+                m = str(tm.minute).zfill(2)
+                tm_str = '{}:{}'.format(h, m)
+            elif 'date' in start:
+                tm_str = None
+            else:
+                tm_str = start
+            return tm_str
+
+        def __init__(self, start):
+            self.all_day = False
+            self.when = None
+            self.parse_time(start)
+
+        def parse_time(self, start):
+            tm = Event.When.parse_time_raw(start)
+            if tm is None:
+                self.all_day = True
+                self.when = ''
+            else:
+                self.all_day = False
+                self.when = tm
+
+        def __str__(self):
+            return '' if self.all_day else self.when
+
+    @staticmethod
+    def parse_summary(raw_event):
+        return raw_event['summary'].strip()
+    
+    @staticmethod
+    def parse_link(raw_event):
+        link = raw_event.get('htmlLink', None)
+        link = raw_event.get('hangoutLink', link)
+        return link
+
+    def __init__(self, raw_event):
+        self.when = Event.When(raw_event['start'])
+        self.summary = Event.parse_summary(raw_event)
+        self.link = Event.parse_link(raw_event)
+
+    def __str__(self):
+        when_prefix = str(self.when)
+        if when_prefix:
+            when_prefix += ' '
+        link_suffix = ' | href={}'.format(self.link) if self.link else ''
+        return '{}{}{}'.format(when_prefix, self.summary, link_suffix)
+
+class Calendar(object):
+    def __init__(self):
+        self.daily = []
+        self.timed = []
+
+    def add_event(self, event):
+        if event.when.all_day:
+            self.daily.append(event)
+        else:
+            self.timed.append(event)
+
+    def __str__(self):
+        num_events = len(self.daily) + len(self.timed)
+        title = '[{}{}]'.format(num_events, u'\u231B')
+        header = '---'
+        daily_events = '\n'.join('{}'.format(e) for e in self.daily)
+        header = '---'
+        timed_events = '\n'.join('{}'.format(e) for e in self.timed)
+        output = '{}\n{}\n{}\n{}'.format(title, header, daily_events, timed_events)
+        return output
+
 def main():
-    """Shows basic usage of the Google Calendar API.
+    """
+    Shows basic usage of the Google Calendar API.
 
     Creates a Google Calendar API service object and outputs a list of the next
     10 events on the user's calendar.
@@ -75,18 +153,14 @@ def main():
                                          maxResults=5,
                                          singleEvents=True,
                                          orderBy='startTime').execute()
+
     events = eventsResult.get('items', [])
-    print '[{}{}]'.format(u'\U0001F310', len(events))
-    print '---'
+
+    calendar = Calendar()
     for event in events:
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        tm = datetime.datetime.strptime(start[0:-6], '%Y-%m-%dT%H:%M:%S')
-        h = tm.hour - 12 if tm.hour > 12 else tm.hour
-        m = str(tm.minute).zfill(2)
-        print '{}:{} {} | href={}'.format(h, 
-                                          m,
-                                          event['summary'], 
-                                          event['hangoutLink'])
+        calendar.add_event(Event(event))
+
+    print(calendar)
 
 if __name__ == '__main__':
     main()
